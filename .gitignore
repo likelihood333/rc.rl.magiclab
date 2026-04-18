@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# IDE/editor
+.idea/
+.vscode/
+.DS_Store
+
+# Logs/runtime
+*.log
+MUJOCO_LOG.TXT
+wandb/
+
+# Large generated outputs
+outputs/
+**/outputs/
+checkpoints/
+**/checkpoints/

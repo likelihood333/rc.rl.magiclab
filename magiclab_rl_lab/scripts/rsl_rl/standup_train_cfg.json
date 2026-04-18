@@ -1,0 +1,11 @@
+{
+  "runtime": {
+    "isaaclab_path": "/home/ubuntu/IsaacLab",
+    "display": ":1"
+  },
+  "loss": {
+    "learning_rate": 0.001,
+    "entropy_coef": 0.01,
+    "value_loss_coef": 1.0
+  }
+}
