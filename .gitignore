@@ -31,3 +31,11 @@ outputs/
 **/outputs/
 checkpoints/
 **/checkpoints/
+model/
+**/model/
+policy/
+**/policy/
+pt/
+**/pt/
+onnx/
+**/onnx/
