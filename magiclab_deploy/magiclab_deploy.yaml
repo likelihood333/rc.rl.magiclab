@@ -1,0 +1,24 @@
+name: z1_deploy
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - python=3.10
+  - pip=24.2
+  - setuptools
+  - wheel
+  - numpy=1.24.3
+  - scipy=1.10.1
+  - tk
+  - openssl
+  - mkl
+  - mkl-service
+  - mkl_fft
+  - mkl_random
+  - certifi
+  - pip:
+      - PyYAML==6.0.3
+      - absl-py==2.3.1
+      - inputs==0.5
+      - mujoco==3.3.7

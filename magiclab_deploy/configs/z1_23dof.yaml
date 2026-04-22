@@ -1,0 +1,60 @@
+policy_path: "/home/eame/FallRecovery/magiclab_deploy/policy/z1_23dof/host_gym_model_12000.pt"
+local_ip: "192.168.54.119"
+device: "cuda"
+policy_format: "checkpoint"
+actor_activation: "elu" # checkpoint only
+
+num_actions: 23
+num_obs: 76
+his_obs: 6
+
+infer_hz: 30
+cmd_hz: 50
+state_timeout_s: 25.0
+initial_stream_warmup_s: 2.0
+state_warmup_publish: true
+state_warmup_interval_s: 0.5
+gait_settle_s: 2.0
+lowlevel_retry: 5
+lowlevel_retry_interval_s: 0.5
+force_highlevel_reset_before_lowlevel: true
+prepare_gait: true
+dry_run: false
+
+arm_control_indices: [0, 1, 2, 3, 4, 7, 8, 9, 10, 11]
+leg_sdk_to_policy: [2, 0, 1, 3, 4, 5, 8, 6, 7, 9, 10, 11]
+leg_policy_to_sdk: [1, 2, 0, 3, 4, 5, 7, 8, 6, 9, 10, 11]
+
+leg_operation_mode: 3
+waist_operation_mode: 3
+arm_operation_mode: 4
+arm_hold_operation_mode: 200
+max_joint_delta: 10.0
+
+ang_vel_scale: 0.25
+gravity_scale: 1.0
+dof_pos_scale: 1.0
+dof_vel_scale: 0.05
+action_scale: 0.4
+action_rescale_obs: 0.5
+
+kps: [150.0, 150.0, 150.0, 200.0, 40.0, 40.0,
+      150.0, 150.0, 150.0, 200.0, 40.0, 40.0,
+      100.0,
+      100.0, 100.0, 100.0, 100.0, 100.0,
+      100.0, 100.0, 100.0, 100.0, 100.0]
+
+kds: [4.0, 4.0, 4.0, 6.0, 2.0, 2.0,
+      4.0, 4.0, 4.0, 6.0, 2.0, 2.0,
+      4.0,
+      4.0, 4.0, 4.0, 4.0, 4.0,
+      4.0, 4.0, 4.0, 4.0, 4.0]
+
+safe_stop_duration_s: 0.30
+safe_stop_kp_scale: 0.20
+safe_stop_kd_scale: 0.20
+log_command_values: true
+log_command_detail: false
+log_joint_command_each_publish: true
+release_on_exit: true
+release_duration_s: 0.30
