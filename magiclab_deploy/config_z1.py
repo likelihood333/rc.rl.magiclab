@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any
 import numpy as np
 import yaml
@@ -13,6 +14,9 @@ class Config:
         self.config: dict[str, Any] = config
 
         self.policy_path = self.config.get("policy_path")
+        if isinstance(self.policy_path, str) and self.policy_path:
+            policy_root = Path(file_path).resolve().parent / self.config.get("policy_root", "..")
+            self.policy_path = str((policy_root / Path(self.policy_path).expanduser()).resolve())
         # self.odom_path = self.config.get("odom_path")
         self.local_ip = self.config.get("local_ip", "192.168.54.111")
         self.policy_format = self.config.get("policy_format", "auto")
