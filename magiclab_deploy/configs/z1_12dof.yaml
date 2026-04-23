@@ -1,5 +1,6 @@
 #
 policy_path: "policy/z1_12dof/policy_gait1_v13_8_8600.pt"
+policy_root: ".."
 local_ip: "192.168.54.111"
 policy_format: "auto"
 # 仅 policy_format 为 checkpoint、从 state_dict 拼 MLP 时生效；纯 JIT 加载不使用此项。
