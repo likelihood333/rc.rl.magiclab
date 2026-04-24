@@ -22,11 +22,11 @@ import torch
 
 import magicbot_z1_python as magicbot
 from settings_23dof import Z1Deploy23dofSettings, load_23dof_settings
+from observations_23dof import build_policy_obs
 from deploy_z1_base import (
     RobotStateBuffer,
     build_zero_torque_command,
     connect_robot,
-    get_gravity_orientation,
     load_policy,
     make_joint_command,
     switch_to_low_level,
@@ -316,40 +316,10 @@ class MagicBotController:
         logging.info("Robot state ready, start control loop.")
 
     def _build_policy_obs(self, snap: dict[str, np.ndarray]) -> np.ndarray:
-        # HoST Z1 23d order: [leg12, waist1, arm10]
-        # Remap SDK leg order to policy leg order.
-        q_leg = snap["leg_pos"][self.leg_sdk_to_policy]
-        dq_leg = snap["leg_vel"][self.leg_sdk_to_policy]
-        q_waist = snap["waist_pos"][:1]
-        dq_waist = snap["waist_vel"][:1]
-        q_arm = snap["arm_pos"][self.arm_control_indices]
-        dq_arm = snap["arm_vel"][self.arm_control_indices]
-
-        qj = np.concatenate([q_leg, q_waist, q_arm], dtype=np.float32)
-        dqj = np.concatenate([dq_leg, dq_waist, dq_arm], dtype=np.float32)
-        if len(qj) != self.cfg.num_actions:
-            raise ValueError(
-                f"State joint dim mismatch, got {len(qj)} expected {self.cfg.num_actions}."
-            )
-
-        omega = snap["imu_ang_vel"] * self.cfg.ang_vel_scale
-        gravity = get_gravity_orientation(snap["imu_quat_wxyz"]) * self.cfg.gravity_scale
-        obs = np.concatenate(
-            [
-                omega.astype(np.float32),
-                gravity.astype(np.float32),
-                qj * self.cfg.dof_pos_scale,
-                dqj * self.cfg.dof_vel_scale,
-                self.last_action.astype(np.float32),
-                np.array([self.cfg.action_rescale_obs], dtype=np.float32),
-            ],
-            dtype=np.float32,
+        return build_policy_obs(
+            snap, self.last_action, self.cfg,
+            self.leg_sdk_to_policy, self.arm_control_indices,
         )
-        if len(obs) != self.cfg.num_obs:
-            raise ValueError(
-                f"Obs dim mismatch, got {len(obs)} expected {self.cfg.num_obs}."
-            )
-        return obs
 
     def _publish_action(self, action: np.ndarray, snap: dict[str, np.ndarray]) -> None:
         q_leg = snap["leg_pos"]

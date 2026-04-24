@@ -9,16 +9,7 @@ import torch
 
 import magicbot_z1_python as magicbot
 from policy_loader import build_actor_from_state_dict, get_activation_module, load_policy
-
-
-def get_gravity_orientation(quaternion_wxyz: np.ndarray) -> np.ndarray:
-    """Body IMU quaternion (w,x,y,z) -> unit vector in body frame"""
-    qw, qx, qy, qz = quaternion_wxyz.astype(np.float64)
-    gravity_orientation = np.zeros(3, dtype=np.float32)
-    gravity_orientation[0] = 2.0 * (-qz * qx + qw * qy)
-    gravity_orientation[1] = -2.0 * (qz * qy + qw * qx)
-    gravity_orientation[2] = 1.0 - 2.0 * (qw * qw + qz * qz)
-    return gravity_orientation
+from observations_23dof import get_gravity_orientation
 
 
 def update_hist(hist_buf: torch.Tensor, cur: torch.Tensor, dim: int) -> torch.Tensor:
