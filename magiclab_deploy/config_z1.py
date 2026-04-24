@@ -7,7 +7,7 @@ import yaml
 class Config:
     def __init__(self, file_path: str) -> None:
         with open(file_path, "r", encoding="utf-8") as f:
-            config = yaml.load(f, Loader=yaml.FullLoader)
+            config = yaml.safe_load(f)
         if not isinstance(config, dict):
             raise ValueError(f"Config file must be a mapping: {file_path}")
 
