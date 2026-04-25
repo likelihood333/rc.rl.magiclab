@@ -1,5 +1,5 @@
-policy_path: "/home/eame/FallRecovery/magiclab_deploy/policy/z1_23dof/host_gym_model_12000.pt"
-policy_root: ".."
+policy_path: "sim2sim/model/z1_dof/host_gym_model_12000.pt"
+policy_root: "../.."
 local_ip: "192.168.54.119"
 device: "cuda"
 policy_format: "checkpoint"
