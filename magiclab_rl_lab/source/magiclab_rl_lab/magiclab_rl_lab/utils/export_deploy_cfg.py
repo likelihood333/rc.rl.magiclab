@@ -25,6 +25,11 @@ def export_deploy_cfg(env: ManagerBasedRLEnv, log_dir):
     joint_ids_map, _ = resolve_matching_names(asset.data.joint_names, joint_sdk_names, preserve_order=True)
 
     cfg = {}  # noqa: SIM904
+    cfg["schema_version"] = 1
+    cfg["joint_names"] = list(asset.data.joint_names)
+    cfg["joint_sdk_names"] = list(joint_sdk_names)
+    cfg["simulation_dt"] = env.cfg.sim.dt
+    cfg["control_decimation"] = env.cfg.decimation
     cfg["joint_ids_map"] = joint_ids_map
     cfg["step_dt"] = env.cfg.sim.dt * env.cfg.decimation
     stiffness = np.zeros(len(joint_sdk_names))
