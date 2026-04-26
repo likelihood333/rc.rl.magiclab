@@ -23,6 +23,7 @@ import torch
 import magicbot_z1_python as magicbot
 from settings_23dof import Z1Deploy23dofSettings, load_23dof_settings
 from observations_23dof import build_policy_obs
+from action_mapping import relative_joint_targets
 from deploy_z1_base import (
     RobotStateBuffer,
     build_zero_torque_command,
@@ -327,31 +328,17 @@ class MagicBotController:
         q_arm_full = snap["arm_pos"]
         q_arm_ctrl = q_arm_full[self.arm_control_indices]
 
-        scaled = np.clip(action, -1.0, 1.0) * self.cfg.action_scale
-        delta_leg_raw = scaled[0:12]
-        delta_waist_raw = scaled[12:13]
-        delta_arm_raw = scaled[13:23]
-        target_leg = q_leg + delta_leg_raw
-        target_waist = q_waist + delta_waist_raw
-        target_arm_ctrl = q_arm_ctrl + delta_arm_raw
-
-        if self.cfg.max_joint_delta > 0.0:
-            target_leg = np.clip(
-                target_leg, q_leg - self.cfg.max_joint_delta, q_leg + self.cfg.max_joint_delta
-            )
-            target_waist = np.clip(
-                target_waist,
-                q_waist - self.cfg.max_joint_delta,
-                q_waist + self.cfg.max_joint_delta,
-            )
-            target_arm_ctrl = np.clip(
-                target_arm_ctrl,
-                q_arm_ctrl - self.cfg.max_joint_delta,
-                q_arm_ctrl + self.cfg.max_joint_delta,
-            )
-
-        # Convert policy leg order back to SDK leg order for publishing.
-        target_leg_sdk = target_leg[self.leg_policy_to_sdk]
+        targets = relative_joint_targets(
+            action, snap,
+            action_scale=self.cfg.action_scale,
+            max_joint_delta=self.cfg.max_joint_delta,
+            leg_sdk_to_policy=self.leg_sdk_to_policy,
+            leg_policy_to_sdk=self.leg_policy_to_sdk,
+            arm_control_indices=self.arm_control_indices,
+        )
+        target_leg_sdk = targets.leg_sdk
+        target_waist = targets.waist
+        target_arm_ctrl = targets.arm
         leg_kp_sdk = self.kps[0:12][self.leg_policy_to_sdk]
         leg_kd_sdk = self.kds[0:12][self.leg_policy_to_sdk]
         leg_delta_sdk = target_leg_sdk - q_leg
