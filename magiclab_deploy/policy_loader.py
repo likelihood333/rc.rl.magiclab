@@ -110,4 +110,3 @@ def load_policy(
     raise RuntimeError(
         f"Failed to load policy format={policy_format}, details={' | '.join(errors)}"
     )
-

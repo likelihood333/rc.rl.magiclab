@@ -34,8 +34,6 @@ from deploy_z1_base import (
 )
 
 
-
-
 def default_23dof_config_path() -> str:
     return os.path.join(os.path.dirname(__file__), "configs", "z1_23dof.yaml")
 
@@ -70,6 +68,9 @@ class MagicBotController:
             raise RuntimeError("CUDA requested but torch.cuda.is_available() is False.")
         self.device = torch.device(cfg.device)
         logging.info("Loading policy on device=%s ...", self.device)
+        logging.info("Policy: %s (%s)", cfg.policy_path, cfg.policy_format)
+        logging.info("Observation: %d x %d; actions: %d", cfg.num_obs, cfg.his_obs, cfg.num_actions)
+        logging.info("Control rates: infer=%dHz publish=%dHz", cfg.infer_hz, cfg.cmd_hz)
         self.policy = load_policy(
             policy_path=cfg.policy_path,
             device=self.device,

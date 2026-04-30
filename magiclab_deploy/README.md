@@ -16,10 +16,10 @@ export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
 Run deployment:
 ```bash
-python deploy_real_z1.py --config=z1_12dof.yaml
+python deploy_real_z1_12dof.py --config=z1_12dof.yaml
 ```
 
-12DOF / 23DOF 共用 `deploy_z1_base.py`（重力向量、观测历史 `update_hist`、策略加载 `load_policy`、零力矩下发等）。
+策略加载在 `policy_loader.py`，23DOF 配置、观测和动作映射分别在 `settings_23dof.py`、`observations_23dof.py`、`action_mapping.py`；相对权重路径从 YAML 所在目录的 `policy_root` 解析。
 两个入口里的主类均名为 `MagicBotController`，差异主要在：受控关节维度、观测构造与控制循环（手柄状态机 vs HoST 分频推理）。
 
 Packages to install for keyboard control:

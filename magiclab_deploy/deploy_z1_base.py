@@ -17,7 +17,6 @@ def update_hist(hist_buf: torch.Tensor, cur: torch.Tensor, dim: int) -> torch.Te
     return torch.cat([hist_buf[:, dim:], cur], dim=-1)
 
 
-
 def make_joint_command(
     target: np.ndarray, kp: np.ndarray, kd: np.ndarray, mode: int
 ) -> magicbot.JointCommand:
