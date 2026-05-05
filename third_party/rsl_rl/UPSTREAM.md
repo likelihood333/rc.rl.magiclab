@@ -15,3 +15,7 @@ notices can be found at the pinned repository's licenses/dependencies/ directory
 Runtime imports use torch, numpy and GitPython. TensorBoard is needed for the
 selected local logging mode. Upstream optional logging modules require their own
 wandb/neptune installations; the local adapter does not enable those modes.
+
+Local changes: the package directory is now magiclab_rsl/; internal imports use
+that namespace. The runner retains a local `rsl_rl` alias only for its own source
+path logging. No installed rsl_rl package is replaced or modified.

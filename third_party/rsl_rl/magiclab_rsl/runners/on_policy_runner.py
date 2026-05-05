@@ -11,11 +11,11 @@ import time
 import torch
 from collections import deque
 
-import rsl_rl
-from rsl_rl.algorithms import PPO
-from rsl_rl.env import VecEnv
-from rsl_rl.modules import ActorCritic, ActorCriticRecurrent, EmpiricalNormalization
-from rsl_rl.utils import store_code_state
+import magiclab_rsl as rsl_rl
+from magiclab_rsl.algorithms import PPO
+from magiclab_rsl.env import VecEnv
+from magiclab_rsl.modules import ActorCritic, ActorCriticRecurrent, EmpiricalNormalization
+from magiclab_rsl.utils import store_code_state
 
 
 class OnPolicyRunner:
@@ -97,12 +97,12 @@ class OnPolicyRunner:
             self.logger_type = self.logger_type.lower()
 
             if self.logger_type == "neptune":
-                from rsl_rl.utils.neptune_utils import NeptuneSummaryWriter
+                from magiclab_rsl.utils.neptune_utils import NeptuneSummaryWriter
 
                 self.writer = NeptuneSummaryWriter(log_dir=self.log_dir, flush_secs=10, cfg=self.cfg)
                 self.writer.log_config(self.env.cfg, self.cfg, self.alg_cfg, self.policy_cfg)
             elif self.logger_type == "wandb":
-                from rsl_rl.utils.wandb_utils import WandbSummaryWriter
+                from magiclab_rsl.utils.wandb_utils import WandbSummaryWriter
 
                 self.writer = WandbSummaryWriter(log_dir=self.log_dir, flush_secs=10, cfg=self.cfg)
                 self.writer.log_config(self.env.cfg, self.cfg, self.alg_cfg, self.policy_cfg)

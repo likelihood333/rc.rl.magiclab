@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import torch
 
-from rsl_rl.utils import split_and_pad_trajectories
+from magiclab_rsl.utils import split_and_pad_trajectories
 
 
 class RolloutStorage:

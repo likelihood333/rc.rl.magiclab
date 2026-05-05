@@ -10,10 +10,10 @@ import torch.nn as nn
 import torch.optim as optim
 import warnings
 
-from rsl_rl.modules import ActorCritic
-from rsl_rl.modules.rnd import RandomNetworkDistillation
-from rsl_rl.storage import RolloutStorage
-from rsl_rl.utils import string_to_callable
+from magiclab_rsl.modules import ActorCritic
+from magiclab_rsl.modules.rnd import RandomNetworkDistillation
+from magiclab_rsl.storage import RolloutStorage
+from magiclab_rsl.utils import string_to_callable
 
 
 class PPO:
