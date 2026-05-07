@@ -66,6 +66,10 @@ class MagiclabVecEnv(VecEnv):
         observations, rewards, terminated, truncated, extras = self.env.step(actions)
         self._observations = observations
         policy, infos = self._pack(observations, extras)
+        if not self.cfg.is_finite_horizon:
+            infos["time_outs"] = truncated & ~terminated
+        else:
+            infos.pop("time_outs", None)
         dones = (terminated | truncated).to(dtype=torch.long)
         return policy, rewards, dones, infos
 
