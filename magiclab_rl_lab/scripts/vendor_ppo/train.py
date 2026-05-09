@@ -56,6 +56,7 @@ def train(args) -> None:
     import magiclab_rl_lab.tasks  # noqa: F401
     from magiclab_rl_lab.algorithms.vendor_ppo.config import TASK_ACTIONS, load_settings
     from magiclab_rl_lab.algorithms.vendor_ppo.vec_env import MagiclabVecEnv
+    from magiclab_rl_lab.algorithms.vendor_ppo.metadata import policy_contract, save_run_metadata, validate_resume
     from isaaclab.utils.io import dump_yaml
 
     cfg = load_settings(args.task, args.config)
@@ -95,6 +96,14 @@ def train(args) -> None:
         with (params_dir / "runner.json").open("w", encoding="utf-8") as stream:
             json.dump(runner_cfg, stream, indent=2)
         dump_yaml(str(params_dir / "env.yaml"), env_cfg)
+        contract = policy_contract(wrapped, args.task, cfg)
+        if args.resume is not None:
+            validate_resume(args.resume, contract)
+        save_run_metadata(
+            params_dir / "run.json", contract=contract,
+            repo_root=Path(__file__).resolve().parents[3], seed=cfg.seed,
+            resume=args.resume, weights_only=args.weights_only,
+        )
         runner = OnPolicyRunner(wrapped, cfg.to_runner_dict(), log_dir=str(log_dir), device=device)
         runner.add_git_repo_to_log(__file__)
         if args.resume is not None:
