@@ -1,1 +1,1 @@
-{"runner": {"seed": 42, "save_interval": 200}, "policy": {"init_noise_std": 0.8}}
+{"runner": {"seed": 42, "save_interval": 100}, "policy": {"init_noise_std": 0.8}}
