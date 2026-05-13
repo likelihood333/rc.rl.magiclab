@@ -91,6 +91,10 @@ def train(args) -> None:
         wrapped = MagiclabVecEnv(env, clip_actions=cfg.clip_actions)
         if wrapped.num_actions != TASK_ACTIONS[args.task]:
             raise ValueError(f"Unexpected action count for {args.task}: {wrapped.num_actions}")
+        rollout_size = wrapped.num_envs * cfg.num_steps_per_env
+        if rollout_size < cfg.algorithm.num_mini_batches:
+            raise ValueError("Rollout must contain at least one sample per PPO mini-batch.")
+        print(f"[INFO] Rollout samples: {rollout_size}; mini-batches: {cfg.algorithm.num_mini_batches}")
         runner_cfg = cfg.to_runner_dict()
         # The upstream runner pops class names, so keep a separate config copy for logging.
         with (params_dir / "runner.json").open("w", encoding="utf-8") as stream:
