@@ -10,6 +10,19 @@ import subprocess
 UPSTREAM_COMMIT = "f80d4750fbdfb62cfdb0c362b7063450f427cf35"
 
 
+def _config_value(value):
+    if callable(value):
+        return f"{value.__module__}:{value.__qualname__}"
+    if hasattr(value, "tolist"):
+        return value.tolist()
+    raise TypeError(f"Unsupported policy contract value: {type(value).__name__}")
+
+
+def _config_snapshot(value) -> dict:
+    # Normalize tuples and configclass callables before comparison with saved JSON.
+    return json.loads(json.dumps(value.to_dict(), default=_config_value))
+
+
 def policy_contract(env, task: str, cfg) -> dict:
     policy, extras = env.get_observations()
     critic = extras["observations"].get("critic", policy)
@@ -24,6 +37,8 @@ def policy_contract(env, task: str, cfg) -> dict:
         "history_length": obs_cfg.history_length,
         "flatten_history_dim": obs_cfg.flatten_history_dim,
         "joint_names": list(env.unwrapped.scene["robot"].data.joint_names),
+        "observations_config": _config_snapshot(env.cfg.observations),
+        "actions_config": _config_snapshot(env.cfg.actions),
         "policy": cfg.to_runner_dict()["policy"],
         "empirical_normalization": cfg.empirical_normalization,
         "clip_actions": cfg.clip_actions,

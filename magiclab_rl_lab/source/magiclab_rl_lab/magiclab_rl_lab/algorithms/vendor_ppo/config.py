@@ -3,6 +3,7 @@
 from dataclasses import asdict, dataclass, field
 import json
 from pathlib import Path
+import math
 
 
 @dataclass
@@ -86,4 +87,27 @@ def load_settings(task: str, config_file: str | None = None) -> RunnerSettings:
         raise ValueError("Rollout length, iterations and save interval must be positive.")
     if cfg.algorithm.num_mini_batches <= 0 or cfg.algorithm.num_learning_epochs <= 0:
         raise ValueError("PPO batch count and learning epochs must be positive.")
+    if not isinstance(cfg.seed, int) or cfg.seed < 0:
+        raise ValueError("seed must be a non-negative integer.")
+    if not cfg.experiment_name or any(char not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for char in cfg.experiment_name):
+        raise ValueError("experiment_name must be a non-empty directory label.")
+    for dims in (cfg.policy.actor_hidden_dims, cfg.policy.critic_hidden_dims):
+        if not isinstance(dims, list) or not dims or any(not isinstance(dim, int) or dim <= 0 for dim in dims):
+            raise ValueError("Hidden dimensions must be a non-empty list of positive integers.")
+    if cfg.policy.activation not in {"elu", "selu", "relu", "crelu", "lrelu", "tanh", "sigmoid", "identity"}:
+        raise ValueError("Unsupported policy activation.")
+    if cfg.policy.noise_std_type not in {"scalar", "log"}:
+        raise ValueError("noise_std_type must be scalar or log.")
+    for name, value in (
+        ("init_noise_std", cfg.policy.init_noise_std),
+        ("learning_rate", cfg.algorithm.learning_rate),
+        ("clip_param", cfg.algorithm.clip_param),
+        ("max_grad_norm", cfg.algorithm.max_grad_norm),
+    ):
+        if not math.isfinite(value) or value <= 0:
+            raise ValueError(f"{name} must be finite and positive.")
+    if cfg.algorithm.schedule not in {"fixed", "adaptive"}:
+        raise ValueError("PPO schedule must be fixed or adaptive.")
+    if not 0 <= cfg.algorithm.gamma <= 1 or not 0 <= cfg.algorithm.lam <= 1:
+        raise ValueError("gamma and lam must lie between zero and one.")
     return cfg

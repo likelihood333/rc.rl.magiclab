@@ -16,11 +16,12 @@ from backend import activate_backend
 def export_actor(checkpoint: Path, output_dir: Path) -> None:
     activate_backend()
     from magiclab_rsl.modules import ActorCritic, EmpiricalNormalization
+    from magiclab_rl_lab.algorithms.vendor_ppo.metadata import UPSTREAM_COMMIT
 
     metadata_path = checkpoint.parent / "params" / "run.json"
     with metadata_path.open(encoding="utf-8") as stream:
         metadata = json.load(stream)
-    if metadata.get("backend") != "magiclab_rsl":
+    if metadata.get("backend") != "magiclab_rsl" or metadata.get("upstream_commit") != UPSTREAM_COMMIT:
         raise ValueError("Expected a checkpoint from the vendored PPO backend.")
     contract = metadata["contract"]
     policy_cfg = copy.deepcopy(contract["policy"])

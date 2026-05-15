@@ -89,3 +89,7 @@ This repository is built upon the support and contributions of the following ope
 - [mujoco](https://github.com/google-deepmind/mujoco.git): Providing powerful simulation functionalities.
 - [robot_lab](https://github.com/fan-ziqi/robot_lab): Referenced for project structure and parts of the implementation.
 - [whole_body_tracking](https://github.com/HybridRobotics/whole_body_tracking): Versatile humanoid control framework for motion tracking.
+
+## 独立 PPO 后端
+
+新增的 vendored PPO 入口、配置、恢复和导出方式见 [`docs/rl/vendor-training.md`](../docs/rl/vendor-training.md)。原 RSL-RL 训练入口继续保留。
