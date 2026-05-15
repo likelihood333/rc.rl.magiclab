@@ -39,3 +39,9 @@ pt/
 **/pt/
 onnx/
 **/onnx/
+
+# Training and exported policies
+logs/
+exports/
+*.pt
+*.onnx
