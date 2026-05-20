@@ -35,6 +35,8 @@ python -m pip install GitPython tensorboard
 
 初始范围：单进程、MLP PPO、TensorBoard；保持现有任务定义、动作语义和 observation manager 历史。现有 `scripts/rsl_rl/train.py` 不受影响。
 
+起身另有 `scripts/vendor_ppo/configs/standup_low_lr.json`：固定学习率 `3e-4`，用于与原 adaptive profile 对比更新幅度。将起身命令的 `--config` 指向该文件即可；该配置尚未运行，没有稳定性或收益结论。
+
 ## 保存与恢复
 
 日志默认在 `logs/vendor_ppo/<experiment>/<timestamp>_<run_name>/`。每个 run 保存 `params/env.yaml`、`params/runner.json`、`params/run.json` 和 `model_<iteration>.pt`。起身 profile 每 100 次更新保存；这只是频率设置，没有产生新权重。
